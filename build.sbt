@@ -1,33 +1,21 @@
 import sbt._
 import Keys._
 
-val commonSettings = Seq(
-  name := "alpina-client",
-  organization := "com.csg.alpina",
-  scalaVersion := "2.11.12",
-  //scalafmtOnCompile := true,
-  //scalafmtVersion := "1.4.0",
-  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xlint"),
-  evictionWarningOptions in update := EvictionWarningOptions.default
-    .withWarnTransitiveEvictions(false)
-)
 
 val akkaVersion = "2.5.9"
 val akkaHttpVersion = "10.0.11"
 val sttpVersion = "1.1.6"
 val circe = "0.8.0"
 
-lazy val rootProject = (project in file("."))
-  .settings(commonSettings: _*)
-  .aggregate(
-    alpina
-  )
-
-lazy val alpina: Project = (project in file("alpina"))
-  .settings(commonSettings: _*)
-  .settings(
+lazy val alpina = (project in file(".")).
+  settings(
     name := "alpina",
-    libraryDependencies ++= Seq(
+    version := "0.0.1",
+    organization := "com.csg.flow.alpina",
+    scalaVersion := "2.11.8",
+    mainClass in Compile := Some("com.csg.flow.alpina.api.Main")
+  )
+libraryDependencies ++= Seq(
       // an explicit dependency is needed to evict the transitive one from akka-http
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
@@ -38,5 +26,16 @@ lazy val alpina: Project = (project in file("alpina"))
       "de.knutwalker" %% "akka-stream-json" % "3.3.0",
       "de.knutwalker" %% "akka-stream-circe" % "3.4.0",
       "io.circe" %% "circe-generic" % circe
-    )
-  )
+ )
+
+assemblyMergeStrategy in assembly := {
+  case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+  case "application.conf"                            => MergeStrategy.concat
+  case "reference.conf"                              => MergeStrategy.discard
+  case "posttradeutility.p12"                        => MergeStrategy.first
+  case "unwanted.txt"                                => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
+}
