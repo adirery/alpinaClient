@@ -11,7 +11,7 @@ object ConnectionContextFactory {
   def connectionContext(isSecure:Boolean) = {
     if(isSecure) {
       val ks = KeyStore.getInstance("PKCS12")
-      val keyStore = new FileInputStream("/root/alpina/certs/posttradeutility.p12")
+      val keyStore = new FileInputStream("/home/ec2-user/certs/posttradeutility.p12")
       val ksPassword = "Password1".toCharArray
       require(keyStore != null, "Keystore Required")
       ks.load(keyStore, ksPassword)
@@ -19,7 +19,7 @@ object ConnectionContextFactory {
       keyManagerFactory.init(ks, ksPassword)
 
       val ts = KeyStore.getInstance("JKS")
-      val trustStore = new FileInputStream("/root/alpina/certs/cacert-added-then-cert-nokey.jks")
+      val trustStore = new FileInputStream("/home/ec2-user/certs/cacert-added-then-cert-nokey.jks")
       val tsPassword = "Password1".toCharArray
       require(trustStore != null, "Truststore Required")
       ts.load(trustStore, tsPassword)

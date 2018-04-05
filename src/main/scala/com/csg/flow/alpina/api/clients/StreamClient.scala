@@ -34,7 +34,7 @@ object StreamClient {
     import com.csg.flow.alpina.api.marshal.AvroSerializers._
 
     val serializer = new AvroSerializer[ApiMetrics]()
-    val schemaId = 0
+    val schemaId = 1
 
     import AlpinaCirceSupport._
 
@@ -45,7 +45,8 @@ object StreamClient {
     ){ () =>
       Source.fromFutureSource {
         sttp
-          .post(uri"$protocol://$host:8125/subscribe")
+          .auth.bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI4NjQ0NjRhMzEyZGU0MjFkYTBiMTdkOTIzNjRhNDYzNyIsIm5hbWUiOiJXaXBybyJ9.uSeKgrE4dElbt6UWv7ggVGc9WIMP3WAoaJnyGapMTOo")
+          .post(uri"https://aster.cspta.ch/custodian-event/plainsubscribe")
           .body("<position>earliest</position>")
           .contentType("application/xml")
           .response(asStream[Source[ByteString, _]])
