@@ -27,7 +27,8 @@ libraryDependencies ++= Seq(
       "de.knutwalker" %% "akka-stream-json" % "3.3.0",
       "de.knutwalker" %% "akka-stream-circe" % "3.4.0",
       "io.circe" %% "circe-generic" % circe,
-      "org.apache.avro" % "avro" % "1.8.1"
+      "org.apache.avro" % "avro" % "1.8.1",
+      "joda-time" % "joda-time" % "2.9.5"
  )
 
 assemblyMergeStrategy in assembly := {

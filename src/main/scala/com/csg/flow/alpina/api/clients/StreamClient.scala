@@ -45,8 +45,8 @@ object StreamClient {
     ){ () =>
       Source.fromFutureSource {
         sttp
-          .auth.bearer("")
           .post(uri"$protocol://$host:8125/subscribe")
+          .auth.bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI4NjQ0NjRhMzEyZGU0MjFkYTBiMTdkOTIzNjRhNDYzNyIsIm5hbWUiOiJXaXBybyJ9.uSeKgrE4dElbt6UWv7ggVGc9WIMP3WAoaJnyGapMTOo")
           .body("<position>earliest</position>")
           .contentType("application/xml")
           .response(asStream[Source[ByteString, _]])
@@ -60,19 +60,28 @@ object StreamClient {
                 messages
                   //.via(JsonStreamParser.flow[Json])
                   //.map(decodeJson[AssetServicingMessage](_))
-                  //.map { m =>
-                    //(System.currentTimeMillis - ts_format.parse(m.properties.timestamp).getTime)/1000
-                  //}
+                  .map { m => //57-80
+                     if(m.size > 80) {
+                       val s = m.slice(57, 80).utf8String
+                       val l = (System.currentTimeMillis - ts_format.parse(s).getTime) / 1000
+                       (m.size, l)
+                     }else{
+                       (m.size, 100L)
+                     }
+                    //
+                  }
                   .groupedWithin(Int.MaxValue, 1000.millis)
-                  .map{latencies =>
-                    AvroApiMetrics("kafka-endpoint", serializer.serialize(ApiMetrics("",
+                  .map{bytesLatencies =>
+                    val latencies = bytesLatencies.map(_._2)
+                    AvroApiMetrics("kafka-endpoint", serializer.serialize(ApiMetrics(
+                      "",
                       System.currentTimeMillis,
-                      0.0, //(latencies.reduce(_ + _))/latencies.size,
+                      (latencies.reduce(_ + _))/latencies.size,
                       0.0,
-                      0L,//latencies.min,
-                      0L,//latencies.max,
-                      latencies.size,
-                      latencies.map(_.).reduce(_ + _)), schemaId))
+                      latencies.min,
+                      latencies.max,
+                      bytesLatencies.size,
+                      bytesLatencies.map(_._1).reduce(_+_)), schemaId))//latencies.map(_.1).reduce(_+_)), schemaId)) //latencies.map(_.size).
                   }
                   .groupedWithin(Int.MaxValue, 3.seconds)
                   .idleTimeout(90.seconds)

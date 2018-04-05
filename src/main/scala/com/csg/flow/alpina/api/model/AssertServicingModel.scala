@@ -1,15 +1,15 @@
 package com.csg.flow.alpina.api.model
 
 case class AssetServicingProperties(
-                                  format:String,
-                                  source:String,
-                                  timestamp:String,
-                                  signature:String,
                                   messageType:String,
-                                  version:String,
                                   sessionId:String,
+                                  sequenceId:Long,
+                                  format:String,
+                                  timestamp:String,
+                                  source:String,
                                   destination:String,
-                                  sequenceId:Long
+                                  version:String,
+                                  signature:String
                                 )
 
 case class AssetServicingMessage(

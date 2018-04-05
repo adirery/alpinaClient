@@ -11,6 +11,7 @@ import akka.stream.scaladsl.{Flow, Source}
 import akka.util.ByteString
 import com.csg.flow.alpina.api.model.{AssetServicingMessage, AssetServicingProperties}
 import com.csg.flow.alpina.api.sink.{ApiMetrics, AvroApiMetrics}
+import org.joda.time.{DateTime, DateTimeZone}
 import spray.json.JsValue
 
 import scala.concurrent.duration._
@@ -61,27 +62,21 @@ object TestServers {
       path("subscribe") {
         post {
           complete {
+            val timestamp = new DateTime().withZone(DateTimeZone.UTC).toString()
             import com.csg.flow.alpina.api.marshal.AlpinaSprayJsonSupport._
             val payload = Random.alphanumeric.toString()
             Source.repeat[AssetServicingMessage](AssetServicingMessage(
-              AssetServicingProperties("json",
-                "CS",
-                "03/26/2018 19:54:00",
-                "signature",
-                "MT564",
-                "1.0",
+              AssetServicingProperties(
+                "TEXT",
                 "FMP",
+                0L,
+                "XML",
+                timestamp,
+                "CS",
                 "UP",
-                0L),
+                "1.0",
+                "signature"),
               payload
-            ))
-          }
-          complete {
-            import com.csg.flow.alpina.api.marshal.AlpinaSprayJsonSupport._
-            Source.repeat[AssetServicingMessage](AssetServicingMessage(
-              AssetServicingProperties("", "", "", "", "", "", "", "", 0L),
-              ""
-
             ))
           }
         }

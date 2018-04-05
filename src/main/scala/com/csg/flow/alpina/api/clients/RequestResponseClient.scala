@@ -22,18 +22,17 @@ object RequestResponseClient {
 
     val f = for {
       response <- sttp
-        .post(uri"$protocol://$host:8123/metrics")
+        .post(uri"https://aster.cspta.ch/custodian-event/metrics")
         .contentType("application/json")
         .body(metrics.asJson)
         .send()
     } yield response.code
 
-    f.onComplete{
+   f.onComplete{
       case Success(r) => println(s" resp from metrics $r")
       case Failure(t) => println(s" failed resp from metrics $t")
 
     }
-
 
   }
 
