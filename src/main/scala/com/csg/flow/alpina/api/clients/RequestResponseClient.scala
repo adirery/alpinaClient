@@ -10,6 +10,7 @@ import akka.util.ByteString
 import com.softwaremill.sttp.{SttpBackend, sttp, _}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 object RequestResponseClient {
 
@@ -19,13 +20,20 @@ object RequestResponseClient {
 
     import AlpinaCirceSupport._
 
-    for {
+    val f = for {
       response <- sttp
         .post(uri"$protocol://$host:8123/metrics")
         .contentType("application/json")
         .body(metrics.asJson)
         .send()
     } yield response.code
+
+    f.onComplete{
+      case Success(r) => println(s" resp from metrics $r")
+      case Failure(t) => println(s" failed resp from metrics $t")
+
+    }
+
 
   }
 

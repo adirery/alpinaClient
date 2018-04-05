@@ -34,7 +34,7 @@ object StreamClient {
     import com.csg.flow.alpina.api.marshal.AvroSerializers._
 
     val serializer = new AvroSerializer[ApiMetrics]()
-    val schemaId = 0
+    val schemaId = 1
 
     import AlpinaCirceSupport._
 
@@ -45,6 +45,7 @@ object StreamClient {
     ){ () =>
       Source.fromFutureSource {
         sttp
+          .auth.bearer("")
           .post(uri"$protocol://$host:8125/subscribe")
           .body("<position>earliest</position>")
           .contentType("application/xml")
@@ -71,7 +72,7 @@ object StreamClient {
                       0L,//latencies.min,
                       0L,//latencies.max,
                       latencies.size,
-                      latencies.map(_.size).reduce(_ + _)), schemaId))
+                      latencies.map(_.).reduce(_ + _)), schemaId))
                   }
                   .groupedWithin(Int.MaxValue, 3.seconds)
                   .idleTimeout(90.seconds)
