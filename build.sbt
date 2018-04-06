@@ -1,7 +1,6 @@
 import sbt._
 import Keys.{libraryDependencies, _}
 
-
 scalaVersion in ThisBuild := "2.11.8"
 
 val akkaVersion = "2.5.9"
@@ -65,13 +64,7 @@ lazy val stagePackage = project
   .settings(
     resourceDirectory in Compile := (resourceDirectory in (alpinaClient, Compile)).value,
     mappings in Universal += {
-      ((resourceDirectory in Compile).value / "stage.conf") -> "conf/application.conf"
+      ((resourceDirectory in Compile).value / "application.conf") -> "conf/application.conf"
     }
   )
   .dependsOn(alpinaClient)
-
-
-
-
-
-
