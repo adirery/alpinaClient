@@ -20,7 +20,7 @@ import com.csg.flow.alpina.api.model.AssetServicingMessage
 
 object StreamLatenciesClient {
 
-  def stream[T](protocol:String, host:String, metricsHost:String)(implicit ec:ExecutionContext,
+  def stream[T](instance:String, protocol:String, host:String, metricsHost:String)(implicit ec:ExecutionContext,
                akkaHttpBackend:SttpBackend[Future, Source[ByteString, Any]],
                as:ActorSystem) ={
 
@@ -28,9 +28,8 @@ object StreamLatenciesClient {
     implicit val mat: ActorMaterializer = ActorMaterializer()
 
     val metricsSink = Sink.actorRef(as.actorOf(MetricsReporterActor.props(protocol, metricsHost),
-      MetricsReporterActor.Name), Complete)
+      s"${MetricsReporterActor.Name}-lat-$instance"), Complete)
 
-    import AlpinaCirceSupport._
     import com.csg.flow.alpina.api.marshal.AvroSerializers._
 
     val serializer = new AvroSerializer[ApiMetrics]()
@@ -69,7 +68,7 @@ object StreamLatenciesClient {
                   .map{bytesLatencies =>
                     val latencies = bytesLatencies.map(_._2)
                     AvroApiMetrics("kafka-endpoint", serializer.serialize(ApiMetrics(
-                      "latencies-client",
+                      s"latencies-client-$instance",
                       System.currentTimeMillis,
                       (latencies.reduce(_ + _))/latencies.size,
                       5.0,
@@ -81,7 +80,7 @@ object StreamLatenciesClient {
                   .groupedWithin(Int.MaxValue, 10.seconds)
                   .idleTimeout(90.seconds)
               case Left(error) =>
-                println("An error has occured: " + error)
+                println("An error has occurred: " + error)
                 Source.single(AvroApiMetrics("kafka-endpoint", serializer.serialize(ApiMetrics("",
                   System.currentTimeMillis,
                   0.0,

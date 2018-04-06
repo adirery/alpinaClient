@@ -18,7 +18,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object StreamClient {
 
-  def stream[T](protocol:String, host:String, metricsHost:String)(implicit ec:ExecutionContext,
+  def stream[T](instance:Int, protocol:String, host:String, metricsHost:String)(implicit ec:ExecutionContext,
                akkaHttpBackend:SttpBackend[Future, Source[ByteString, Any]],
                as:ActorSystem) ={
 
@@ -26,7 +26,7 @@ object StreamClient {
     implicit val mat: ActorMaterializer = ActorMaterializer()
 
     val metricsSink = Sink.actorRef(as.actorOf(MetricsReporterActor.props(protocol, metricsHost),
-      MetricsReporterActor.Name), Complete)
+      s"${MetricsReporterActor.Name}-raw-$instance"), Complete)
 
     import AlpinaCirceSupport._
     import com.csg.flow.alpina.api.marshal.AvroSerializers._
@@ -57,7 +57,7 @@ object StreamClient {
                   .groupedWithin(Int.MaxValue, 1000.millis)
                   .map{bytesLatencies =>
                     AvroApiMetrics("kafka-endpoint", serializer.serialize(ApiMetrics(
-                      "raw-client",
+                      s"raw-client-$instance",
                       System.currentTimeMillis,
                       0.0,//(latencies.reduce(_ + _))/latencies.size,
                       0.0,

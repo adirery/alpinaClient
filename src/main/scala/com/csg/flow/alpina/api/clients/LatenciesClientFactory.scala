@@ -1,0 +1,35 @@
+package com.csg.flow.alpina.api.clients
+
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import com.csg.flow.alpina.api.clients.StreamLatenciesClient.stream
+import com.csg.flow.alpina.api.model.AssetServicingMessage
+import com.csg.flow.alpina.api.ssl.ConnectionContextFactory.connectionContext
+import com.softwaremill.sttp.akkahttp.AkkaHttpBackend
+import com.typesafe.config.Config
+
+import scala.concurrent.ExecutionContext
+
+object LatenciesClientFactory {
+
+  def latenciesStream(config:Config)(implicit ec:ExecutionContext,actorSystem:ActorSystem, mat:ActorMaterializer) ={
+
+    val protocol = config.getString("sttp.connection.protocol")
+    val host = config.getString("sttp.connection.host")
+    val metricsHost = config.getString("sttp.connection.metrics.host")
+    val numberOfRawClients = config.getInt("sttp.connection.latencies.clients")
+
+    implicit val sttpBackend = AkkaHttpBackend
+      .usingActorSystem(actorSystem, customHttpsContext = connectionContext(
+        config.getBoolean("sttp.connection.isSecure")
+      )
+      )
+
+    for (i <- 0 to numberOfRawClients){
+      stream[AssetServicingMessage](i.toString, protocol, host, metricsHost)
+
+    }
+
+  }
+
+}
