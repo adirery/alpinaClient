@@ -57,6 +57,17 @@ lazy val testPackage = project
   )
   .dependsOn(alpinaClient)
 
+lazy val stagePackage = project
+  .in(file("build/stage"))
+  .enablePlugins(JavaAppPackaging)
+  .settings(
+    resourceDirectory in Compile := (resourceDirectory in (alpinaClient, Compile)).value,
+    mappings in Universal += {
+      ((resourceDirectory in Compile).value / "stage.conf") -> "conf/application.conf"
+    }
+  )
+  .dependsOn(alpinaClient)
+
 
 
 
