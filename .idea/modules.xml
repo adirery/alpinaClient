@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/alpina.iml" filepath="$PROJECT_DIR$/.idea/modules/alpina.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/alpina-build.iml" filepath="$PROJECT_DIR$/.idea/modules/alpina-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/alpinaClient.iml" filepath="$PROJECT_DIR$/.idea/modules/alpinaClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/alpinaClient-build.iml" filepath="$PROJECT_DIR$/.idea/modules/alpinaClient-build.iml" />
     </modules>
   </component>
 </project>
