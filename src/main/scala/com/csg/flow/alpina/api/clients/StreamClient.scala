@@ -45,7 +45,7 @@ object StreamClient {
     ){ () =>
       Source.fromFutureSource {
         sttp
-          .post(uri"$protocol://$host:8125/subscribe")
+          .post(uri"$protocol://$host/custodian-event/subscribe")
           .auth.bearer("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI4NjQ0NjRhMzEyZGU0MjFkYTBiMTdkOTIzNjRhNDYzNyIsIm5hbWUiOiJXaXBybyJ9.uSeKgrE4dElbt6UWv7ggVGc9WIMP3WAoaJnyGapMTOo")
           .body("<position>earliest</position>")
           .contentType("application/xml")
@@ -55,35 +55,20 @@ object StreamClient {
           .map { resp =>
             resp match {
               case Right(messages) =>
-                import io.circe._
-                import io.circe.jawn.CirceSupportParser._
                 messages
-                  //.via(JsonStreamParser.flow[Json])
-                  //.map(decodeJson[AssetServicingMessage](_))
-                  .map { m => //57-80
-                     if(m.size > 80) {
-                       val s = m.slice(57, 80).utf8String
-                       val l = (System.currentTimeMillis - ts_format.parse(s).getTime) / 1000
-                       (m.size, l)
-                     }else{
-                       (m.size, 100L)
-                     }
-                    //
-                  }
                   .groupedWithin(Int.MaxValue, 1000.millis)
                   .map{bytesLatencies =>
-                    val latencies = bytesLatencies.map(_._2)
                     AvroApiMetrics("kafka-endpoint", serializer.serialize(ApiMetrics(
-                      "",
+                      "raw-client",
                       System.currentTimeMillis,
-                      (latencies.reduce(_ + _))/latencies.size,
+                      0.0,//(latencies.reduce(_ + _))/latencies.size,
                       0.0,
-                      latencies.min,
-                      latencies.max,
+                      0L,//latencies.min,
+                      0L,//latencies.max,
                       bytesLatencies.size,
-                      bytesLatencies.map(_._1).reduce(_+_)), schemaId))//latencies.map(_.1).reduce(_+_)), schemaId)) //latencies.map(_.size).
-                  }
-                  .groupedWithin(Int.MaxValue, 3.seconds)
+                      bytesLatencies.map(_.size).reduce(_+_)), schemaId))//latencies.map(_.1).reduce(_+_)), schemaId)) //latencies.map(_.size).
+                 } 
+                  .groupedWithin(Int.MaxValue, 10.seconds)
                   .idleTimeout(90.seconds)
               case Left(error) =>
                 println("An error has occured: " + error)

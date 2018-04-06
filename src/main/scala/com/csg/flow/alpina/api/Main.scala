@@ -6,7 +6,8 @@ import com.csg.flow.alpina.api.mock.backends.TestMetricsServers._
 import com.softwaremill.sttp.akkahttp.AkkaHttpBackend
 import com.csg.flow.alpina.api.mock.backends.TestServers._
 import scala.concurrent.ExecutionContext
-import com.csg.flow.alpina.api.clients.StreamClient._
+import com.csg.flow.alpina.api.clients.StreamLatenciesClient._
+//import com.csg.flow.alpina.api.clients.StreamClient._
 import com.csg.flow.alpina.api.model.AssetServicingMessage
 import com.typesafe.config.ConfigFactory
 import com.csg.flow.alpina.api.ssl.ConnectionContextFactory._

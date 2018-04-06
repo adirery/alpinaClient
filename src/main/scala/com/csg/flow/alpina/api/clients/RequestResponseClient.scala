@@ -29,8 +29,8 @@ object RequestResponseClient {
     } yield response.code
 
    f.onComplete{
-      case Success(r) => println(s" resp from metrics $r")
-      case Failure(t) => println(s" failed resp from metrics $t")
+      case Success(r) => //println(s" resp from metrics $r")
+      case Failure(t) => //println(s" failed resp from metrics $t")
 
     }
 
