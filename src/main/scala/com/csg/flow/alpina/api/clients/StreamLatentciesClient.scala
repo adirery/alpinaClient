@@ -20,14 +20,14 @@ import com.csg.flow.alpina.api.model.AssetServicingMessage
 
 object StreamLatenciesClient {
 
-  def stream[T](protocol:String, host:String)(implicit ec:ExecutionContext,
+  def stream[T](protocol:String, host:String, metricsHost:String)(implicit ec:ExecutionContext,
                akkaHttpBackend:SttpBackend[Future, Source[ByteString, Any]],
                as:ActorSystem) ={
 
     val ts_format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
     implicit val mat: ActorMaterializer = ActorMaterializer()
 
-    val metricsSink = Sink.actorRef(as.actorOf(MetricsReporterActor.props(protocol, host),
+    val metricsSink = Sink.actorRef(as.actorOf(MetricsReporterActor.props(protocol, metricsHost),
       MetricsReporterActor.Name), Complete)
 
     import AlpinaCirceSupport._

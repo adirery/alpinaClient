@@ -4,6 +4,14 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/alpinaClient.iml" filepath="$PROJECT_DIR$/.idea/modules/alpinaClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/alpinaClient-build.iml" filepath="$PROJECT_DIR$/.idea/modules/alpinaClient-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/build-stagePackage.iml" filepath="$PROJECT_DIR$/.idea/modules/build-stagePackage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/build-testPackage.iml" filepath="$PROJECT_DIR$/.idea/modules/build-testPackage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/stagePackage.iml" filepath="$PROJECT_DIR$/.idea/modules/stagePackage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/stagePackage-build.iml" filepath="$PROJECT_DIR$/.idea/modules/stagePackage-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/stagePackage-build~1.iml" filepath="$PROJECT_DIR$/.idea/modules/stagePackage-build~1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/testPackage.iml" filepath="$PROJECT_DIR$/.idea/modules/testPackage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/testPackage-build.iml" filepath="$PROJECT_DIR$/.idea/modules/testPackage-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/testPackage-build~1.iml" filepath="$PROJECT_DIR$/.idea/modules/testPackage-build~1.iml" />
     </modules>
   </component>
 </project>

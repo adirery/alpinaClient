@@ -33,9 +33,10 @@ object Main extends App {
 
   val protocol = config.getString("sttp.connection.protocol")
   val host = config.getString("sttp.connection.host")
+  val metricsHost = config.getString("sttp.connection.metrics.host")
 
 
-  stream[AssetServicingMessage](protocol, host)
+  stream[AssetServicingMessage](protocol, host, metricsHost)
 
 
 }

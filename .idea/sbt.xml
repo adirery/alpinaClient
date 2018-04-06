@@ -7,6 +7,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/build/stage" />
+            <option value="$PROJECT_DIR$/build/stage/project" />
+            <option value="$PROJECT_DIR$/build/test" />
+            <option value="$PROJECT_DIR$/build/test/project" />
             <option value="$PROJECT_DIR$/project" />
           </set>
         </option>

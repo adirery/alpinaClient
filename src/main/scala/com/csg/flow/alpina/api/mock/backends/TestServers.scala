@@ -31,7 +31,7 @@ object TestMetricsServers extends akka.http.scaladsl.marshallers.sprayjson.Spray
 
   def startMetricsServer(): Unit = {
     val routes: Route =
-      path("metrics") {
+      path("custodian-event" / "metrics") {
         post {
           entity(as[Seq[AvroApiMetrics]]) { apiMetrics =>
             apiMetrics.foreach(println(_))
@@ -59,7 +59,7 @@ object TestServers {
       .withFramingRenderer(Flow[ByteString].intersperse(sep))
 
     val routes: Route =
-      path("subscribe") {
+      path("custodian-event" / "subscribe") {
         post {
           complete {
             val timestamp = new DateTime().withZone(DateTimeZone.UTC).toString()
@@ -82,6 +82,7 @@ object TestServers {
         }
 
       }
+
 
     Await.result(Http().bindAndHandle(routes, "localhost", 8125), 1000.seconds)
   }

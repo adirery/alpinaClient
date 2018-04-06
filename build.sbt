@@ -2,6 +2,8 @@ import sbt._
 import Keys.{libraryDependencies, _}
 
 
+scalaVersion in ThisBuild := "2.11.8"
+
 val akkaVersion = "2.5.9"
 val akkaHttpVersion = "10.0.11"
 val sttpVersion = "1.1.6"
