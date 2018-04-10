@@ -18,12 +18,12 @@ class ClientOrchestratorActor(config:Config)(implicit mat:ActorMaterializer, ec:
   }
 
   def receive()={
-    case StartIncreasing() =>
+    case StartIncreasing =>
       println(s"starting client")
       rawStream(config, 1)
 
     case Schedule() =>
-      context.system.scheduler.schedule(0 milliseconds, 1 minutes, self, StartIncreasing())
+      context.system.scheduler.schedule(0 milliseconds, 1 minutes, self, StartIncreasing)
 
     case _ =>
       println("unknown message in ClientOrchestrator")
