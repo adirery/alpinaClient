@@ -36,7 +36,7 @@ class MetricsReporterActor(protocol:String, host:String)(implicit ec:ExecutionCo
       RequestResponseClient.send(protocol, host, Seq(metrics))
 
     case metrics: Vector[AvroApiMetrics]=>
-      println(s"rec metrics $metrics")
+      //println(s"rec metrics $metrics")
       RequestResponseClient.send(protocol, host, metrics)
 
     case _ => println("Unexpected message in MetricsReporterActor")

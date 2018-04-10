@@ -77,7 +77,7 @@ object StreamLatenciesClient {
                       bytesLatencies.size,
                       bytesLatencies.map(_._1).reduce(_+_)), schemaId))
                   }
-                  .groupedWithin(Int.MaxValue, 10.seconds)
+                  .groupedWithin(Int.MaxValue, 60.seconds)
                   .idleTimeout(90.seconds)
               case Left(error) =>
                 println("An error has occurred: " + error)
