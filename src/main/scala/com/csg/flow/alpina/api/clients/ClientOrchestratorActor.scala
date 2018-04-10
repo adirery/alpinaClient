@@ -8,23 +8,27 @@ import com.typesafe.config.Config
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
-case class Schedule()
+case class Schedule(name:Int)
+case class StartIncreasing(name:Int)
+
 
 class ClientOrchestratorActor(config:Config)(implicit mat:ActorMaterializer, ec:ExecutionContext, actorSystem:ActorSystem) extends Actor {
 
-  val StartIncreasing = "StartIncreasing"
 
   override def preStart(): Unit = {
-    self ! Schedule()
+    self ! Schedule(0)
   }
 
   def receive()={
-    case StartIncreasing =>
+    case StartIncreasing(name) =>
       println(s"starting client")
-      rawStream(config, 1)
+      rawStream(config, name, 1)
+      val newName = name + 1
+      context.system.scheduler.scheduleOnce(1 minutes, self, StartIncreasing(newName))
 
-    case Schedule() =>
-      context.system.scheduler.schedule(0 milliseconds, 1 minutes, self, StartIncreasing)
+
+    case Schedule(name) =>
+      context.system.scheduler.scheduleOnce(0 milliseconds, self, StartIncreasing(name))
 
     case m@_ =>
       println(s"unknown message in ClientOrchestrator $m")

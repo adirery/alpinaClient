@@ -18,7 +18,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object StreamClient {
 
-  def stream[T](instance:Int, protocol:String, host:String, metricsHost:String)(implicit ec:ExecutionContext,
+  def stream[T](instance:String, protocol:String, host:String, metricsHost:String)(implicit ec:ExecutionContext,
                akkaHttpBackend:SttpBackend[Future, Source[ByteString, Any]],
                as:ActorSystem) ={
 

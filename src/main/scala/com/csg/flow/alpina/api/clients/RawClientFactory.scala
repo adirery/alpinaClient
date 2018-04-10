@@ -2,7 +2,6 @@ package com.csg.flow.alpina.api.clients
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.csg.flow.alpina.api.Main.{actorSystem, config}
 import com.csg.flow.alpina.api.clients.StreamClient._
 import com.csg.flow.alpina.api.model.AssetServicingMessage
 import com.csg.flow.alpina.api.ssl.ConnectionContextFactory.connectionContext
@@ -14,7 +13,7 @@ import scala.concurrent.ExecutionContext
 
 object RawClientFactory {
 
-  def rawStream(config:Config, numberOfRawClients:Int=0)(implicit ec:ExecutionContext,actorSystem:ActorSystem, mat:ActorMaterializer) ={
+  def rawStream(config:Config, name:Int, numberOfRawClients:Int=0)(implicit ec:ExecutionContext,actorSystem:ActorSystem, mat:ActorMaterializer) ={
 
     val protocol = config.getString("sttp.connection.protocol")
     val host = config.getString("sttp.connection.host")
@@ -27,7 +26,7 @@ object RawClientFactory {
       )
 
     for (i <- 0 to numberOfRawClients){
-      stream[AssetServicingMessage](i, protocol, host, metricsHost)
+      stream[AssetServicingMessage](s"$name-$i", protocol, host, metricsHost)
 
     }
 
