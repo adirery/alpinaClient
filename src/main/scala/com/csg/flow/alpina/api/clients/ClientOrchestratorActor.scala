@@ -18,7 +18,7 @@ class ClientOrchestratorActor(config:Config)(implicit mat:ActorMaterializer, ec:
   }
 
   def receive()={
-    case StartIncreasing =>
+    case StartIncreasing() =>
       println(s"starting client")
       rawStream(config, 1)
 
