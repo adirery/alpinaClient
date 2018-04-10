@@ -2,9 +2,11 @@ package com.csg.flow.alpina.api
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
+import com.csg.flow.alpina.api.clients.ClientOrchestratorActor
 import com.csg.flow.alpina.api.mock.backends.TestMetricsServers._
 import com.softwaremill.sttp.akkahttp.AkkaHttpBackend
 import com.csg.flow.alpina.api.mock.backends.TestServers._
+
 import scala.concurrent.ExecutionContext
 import com.csg.flow.alpina.api.clients.LatenciesClientFactory._
 import com.csg.flow.alpina.api.clients.RawClientFactory._
@@ -30,8 +32,14 @@ object Main extends App {
     startMetricsServer()
   }
 
-  rawStream(config)
-  latenciesStream(config)
+  actorSystem.actorOf(ClientOrchestratorActor.props(config))
+  val numberOfRawClients = config.getInt("sttp.connection.raw.clients")
+
+  rawStream(config, numberOfRawClients)
+
+  val numberOfLatencyClients = config.getInt("sttp.connection.latencies.clients")
+
+  latenciesStream(config, numberOfLatencyClients)
 
 
 }

@@ -14,12 +14,11 @@ import scala.concurrent.ExecutionContext
 
 object RawClientFactory {
 
-  def rawStream(config:Config)(implicit ec:ExecutionContext,actorSystem:ActorSystem, mat:ActorMaterializer) ={
+  def rawStream(config:Config, numberOfRawClients:Int=0)(implicit ec:ExecutionContext,actorSystem:ActorSystem, mat:ActorMaterializer) ={
 
     val protocol = config.getString("sttp.connection.protocol")
     val host = config.getString("sttp.connection.host")
     val metricsHost = config.getString("sttp.connection.metrics.host")
-    val numberOfRawClients = config.getInt("sttp.connection.raw.clients")
 
     implicit val sttpBackend = AkkaHttpBackend
       .usingActorSystem(actorSystem, customHttpsContext = connectionContext(

@@ -12,12 +12,11 @@ import scala.concurrent.ExecutionContext
 
 object LatenciesClientFactory {
 
-  def latenciesStream(config:Config)(implicit ec:ExecutionContext,actorSystem:ActorSystem, mat:ActorMaterializer) ={
+  def latenciesStream(config:Config, numberOfRawClients:Int=0)(implicit ec:ExecutionContext,actorSystem:ActorSystem, mat:ActorMaterializer) ={
 
     val protocol = config.getString("sttp.connection.protocol")
     val host = config.getString("sttp.connection.host")
     val metricsHost = config.getString("sttp.connection.metrics.host")
-    val numberOfRawClients = config.getInt("sttp.connection.latencies.clients")
 
     implicit val sttpBackend = AkkaHttpBackend
       .usingActorSystem(actorSystem, customHttpsContext = connectionContext(
