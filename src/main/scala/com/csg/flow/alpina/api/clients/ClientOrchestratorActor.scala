@@ -15,7 +15,7 @@ class ClientOrchestratorActor(config:Config)(implicit mat:ActorMaterializer, ec:
   val StartIncreasing = "StartIncreasing"
 
   override def preStart(): Unit = {
-    self ! Schedule
+    self ! Schedule()
   }
 
   def receive()={
