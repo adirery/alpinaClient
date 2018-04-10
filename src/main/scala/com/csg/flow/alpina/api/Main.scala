@@ -33,13 +33,13 @@ object Main extends App {
   }
 
   actorSystem.actorOf(ClientOrchestratorActor.props(config))
-  val numberOfRawClients = config.getInt("sttp.connection.raw.clients")
+  //val numberOfRawClients = config.getInt("sttp.connection.raw.clients")
 
-  rawStream(config, numberOfRawClients)
+  //rawStream(config, numberOfRawClients)
 
-  val numberOfLatencyClients = config.getInt("sttp.connection.latencies.clients")
+  //val numberOfLatencyClients = config.getInt("sttp.connection.latencies.clients")
 
-  latenciesStream(config, numberOfLatencyClients)
+  //latenciesStream(config, numberOfLatencyClients)
 
 
 }
