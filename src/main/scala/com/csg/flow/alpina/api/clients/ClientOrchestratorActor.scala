@@ -26,8 +26,8 @@ class ClientOrchestratorActor(config:Config)(implicit mat:ActorMaterializer, ec:
     case Schedule() =>
       context.system.scheduler.schedule(0 milliseconds, 1 minutes, self, StartIncreasing)
 
-    case _ =>
-      println("unknown message in ClientOrchestrator")
+    case m@_ =>
+      println(s"unknown message in ClientOrchestrator $m")
 
   }
 
