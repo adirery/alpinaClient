@@ -21,8 +21,8 @@ class ClientOrchestratorActor(config:Config)(implicit mat:ActorMaterializer, ec:
 
   def receive()={
     case StartIncreasing(name) =>
-      println(s"starting client")
-      rawStream(config, name, 1)
+      println(s"starting client $name")
+      rawStream(config, name, 0)
       val newName = name + 1
       context.system.scheduler.scheduleOnce(1 minutes, self, StartIncreasing(newName))
 
